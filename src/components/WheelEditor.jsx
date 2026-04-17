@@ -162,7 +162,7 @@ function WheelEditor({ isOpen, onClose, onSave, onDelete, wheel }) {
 
         <div className="editor-field">
           <label>
-            Items <span className="hint">(2\u201316)</span>
+            Items <span className="hint">(2{'\u2013'}16)</span>
             {riggedMode && (
               <span className="rigged-hint">
                 {riggedItemName ? ` \u2014 rigged: ${riggedItemName}` : ' \u2014 click an item to rig'}
