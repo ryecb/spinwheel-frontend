@@ -124,6 +124,7 @@ function App() {
   return (
     <div className="container">
       <h1>{'\u{1F3A1}'} The Fairest Wheel {'\u{1F3A1}'}</h1>
+      <p className="subtitle">Because AI can't decide for you either.</p>
 
       <WheelSelector
         wheels={wheels}
