@@ -18,18 +18,18 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
 
   const buildSliceClipPath = (angle) => {
     const startAngle = 90;
-    const angle1 = startAngle;
-    const angle2 = startAngle + angle;
+    const steps = Math.max(2, Math.ceil(angle / 45));
+    const points = ['50% 50%'];
 
-    const rad1 = (angle1 * Math.PI) / 180;
-    const rad2 = (angle2 * Math.PI) / 180;
+    for (let s = 0; s <= steps; s++) {
+      const a = startAngle + (angle * s) / steps;
+      const rad = (a * Math.PI) / 180;
+      const x = 50 + 50 * Math.cos(rad);
+      const y = 50 - 50 * Math.sin(rad);
+      points.push(`${x}% ${y}%`);
+    }
 
-    const x1 = 50 + 50 * Math.cos(rad1);
-    const y1 = 50 - 50 * Math.sin(rad1);
-    const x2 = 50 + 50 * Math.cos(rad2);
-    const y2 = 50 - 50 * Math.sin(rad2);
-
-    return `polygon(50% 50%, ${x1}% ${y1}%, ${x2}% ${y2}%)`;
+    return `polygon(${points.join(', ')})`;
   };
 
   const spin = useCallback(() => {
@@ -106,6 +106,14 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
 
   const clipPath = buildSliceClipPath(sliceAngle);
 
+  const midAngleDeg = 90 + sliceAngle / 2;
+  const midAngleRad = (midAngleDeg * Math.PI) / 180;
+  const textDistance = 33;
+  const textLeft = 50 + textDistance * Math.cos(midAngleRad);
+  const textTop = 50 - textDistance * Math.sin(midAngleRad);
+  const textRotation = 90 - sliceAngle / 2;
+  const fontSize = Math.max(10, Math.min(16, sliceAngle * 0.7));
+
   return (
     <>
       <div className="wheel-container">
@@ -125,7 +133,17 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
                   theme.sliceColors[i % theme.sliceColors.length],
               }}
             >
-              <div className="slice-text">{item.name}</div>
+              <div
+                className="slice-text"
+                style={{
+                  left: `${textLeft}%`,
+                  top: `${textTop}%`,
+                  transform: `translate(-50%, -50%) rotate(${textRotation}deg)`,
+                  fontSize: `${fontSize}px`,
+                }}
+              >
+                {item.name}
+              </div>
             </div>
           ))}
           <div className="center-circle" onClick={spin} />

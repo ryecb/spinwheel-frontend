@@ -60,7 +60,10 @@ function WheelEditor({ isOpen, onClose, onSave, onDelete, wheel }) {
     }
   };
 
+  const MAX_ITEMS = 16;
+
   const handleAddItem = () => {
+    if (items.length >= MAX_ITEMS) return;
     setItems([...items, '']);
   };
 
@@ -98,7 +101,7 @@ function WheelEditor({ isOpen, onClose, onSave, onDelete, wheel }) {
     if (e.key === 'Enter') {
       if (editingIndex !== null) {
         finishEditing();
-      } else if (index === items.length - 1 && items[index].trim()) {
+      } else if (index === items.length - 1 && items[index].trim() && items.length < MAX_ITEMS) {
         handleAddItem();
         setTimeout(() => {
           const inputs = document.querySelectorAll('.item-input');
@@ -159,7 +162,7 @@ function WheelEditor({ isOpen, onClose, onSave, onDelete, wheel }) {
 
         <div className="editor-field">
           <label>
-            Items <span className="hint">(min 2)</span>
+            Items <span className="hint">(2\u201316)</span>
             {riggedMode && (
               <span className="rigged-hint">
                 {riggedItemName ? ` \u2014 rigged: ${riggedItemName}` : ' \u2014 click an item to rig'}
@@ -213,8 +216,12 @@ function WheelEditor({ isOpen, onClose, onSave, onDelete, wheel }) {
               </div>
             ))}
           </div>
-          <button className="add-item-button" onClick={handleAddItem}>
-            + Add Item
+          <button
+            className="add-item-button"
+            onClick={handleAddItem}
+            disabled={items.length >= MAX_ITEMS}
+          >
+            {items.length >= MAX_ITEMS ? `Max ${MAX_ITEMS} items` : '+ Add Item'}
           </button>
         </div>
 
