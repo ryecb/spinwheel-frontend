@@ -148,7 +148,9 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
               );
             })}
           </svg>
-          <div className="center-circle" onClick={spin} />
+        </div>
+        <div className="center-circle" onClick={spin}>
+          <span className="center-label">SPIN</span>
         </div>
       </div>
 
