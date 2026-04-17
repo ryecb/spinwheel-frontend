@@ -16,20 +16,15 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
 
   const sliceAngle = 360 / items.length;
 
-  const buildSliceClipPath = (angle) => {
-    const startAngle = 90;
-    const steps = Math.max(2, Math.ceil(angle / 45));
-    const points = ['50% 50%'];
-
-    for (let s = 0; s <= steps; s++) {
-      const a = startAngle + (angle * s) / steps;
-      const rad = (a * Math.PI) / 180;
-      const x = 50 + 50 * Math.cos(rad);
-      const y = 50 - 50 * Math.sin(rad);
-      points.push(`${x}% ${y}%`);
-    }
-
-    return `polygon(${points.join(', ')})`;
+  const buildArcPath = (startDeg, endDeg, r, cx, cy) => {
+    const startRad = (startDeg * Math.PI) / 180;
+    const endRad = (endDeg * Math.PI) / 180;
+    const x1 = cx + r * Math.cos(startRad);
+    const y1 = cy + r * Math.sin(startRad);
+    const x2 = cx + r * Math.cos(endRad);
+    const y2 = cy + r * Math.sin(endRad);
+    const largeArc = endDeg - startDeg > 180 ? 1 : 0;
+    return `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${largeArc} 1 ${x2},${y2} Z`;
   };
 
   const spin = useCallback(() => {
@@ -104,15 +99,11 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
     animate();
   }, []);
 
-  const clipPath = buildSliceClipPath(sliceAngle);
-
-  const midAngleDeg = 90 + sliceAngle / 2;
-  const midAngleRad = (midAngleDeg * Math.PI) / 180;
-  const textDistance = 33;
-  const textLeft = 50 + textDistance * Math.cos(midAngleRad);
-  const textTop = 50 - textDistance * Math.sin(midAngleRad);
-  const textRotation = 90 - sliceAngle / 2;
+  const r = 50;
+  const cx = 50;
+  const cy = 50;
   const fontSize = Math.max(10, Math.min(16, sliceAngle * 0.7));
+  const textDistance = 33;
 
   return (
     <>
@@ -124,30 +115,39 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
           </svg>
         </div>
         <div className="wheel" ref={wheelRef}>
-          {items.map((item, i) => (
-            <div
-              key={item.name + i}
-              className="slice"
-              style={{
-                clipPath,
-                transform: `rotate(${i * sliceAngle}deg)`,
-                backgroundColor:
-                  theme.sliceColors[i % theme.sliceColors.length],
-              }}
-            >
-              <div
-                className="slice-text"
-                style={{
-                  left: `${textLeft}%`,
-                  top: `${textTop}%`,
-                  transform: `translate(-50%, -50%) rotate(${textRotation}deg)`,
-                  fontSize: `${fontSize}px`,
-                }}
-              >
-                {item.name}
-              </div>
-            </div>
-          ))}
+          <svg viewBox="0 0 100 100" className="wheel-svg">
+            {items.map((item, i) => {
+              const startDeg = -90 + i * sliceAngle;
+              const endDeg = startDeg + sliceAngle;
+              const midDeg = startDeg + sliceAngle / 2;
+              const midRad = (midDeg * Math.PI) / 180;
+              const textX = cx + textDistance * Math.cos(midRad);
+              const textY = cy + textDistance * Math.sin(midRad);
+              const textRotate = midDeg;
+
+              return (
+                <g key={item.name + i}>
+                  <path
+                    d={buildArcPath(startDeg, endDeg, r, cx, cy)}
+                    fill={theme.sliceColors[i % theme.sliceColors.length]}
+                    stroke="rgba(255,255,255,0.15)"
+                    strokeWidth="0.3"
+                  />
+                  <text
+                    x={textX}
+                    y={textY}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    transform={`rotate(${textRotate}, ${textX}, ${textY})`}
+                    className="slice-text-svg"
+                    fontSize={fontSize * (100 / 500)}
+                  >
+                    {item.name}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
           <div className="center-circle" onClick={spin} />
         </div>
       </div>
