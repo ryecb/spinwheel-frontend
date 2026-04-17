@@ -3,6 +3,7 @@ import { fetchWheels, createWheel, updateWheel, deleteWheel } from './api/wheelA
 import Wheel from './components/Wheel';
 import WheelSelector from './components/WheelSelector';
 import WheelEditor from './components/WheelEditor';
+import SettingsModal from './components/SettingsModal';
 import './App.css';
 
 const DEFAULT_THEME = {
@@ -19,6 +20,7 @@ const FALLBACK_WHEEL = {
   name: 'PM Demo',
   riggedEnabled: true,
   riggedItemName: 'Loreli',
+  confettiEnabled: false,
   items: [
     { name: 'Sophie', position: 0 },
     { name: 'Marcus', position: 1 },
@@ -44,6 +46,7 @@ function App() {
   const [theme] = useState(DEFAULT_THEME);
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingWheel, setEditingWheel] = useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const loadWheels = useCallback(async () => {
     try {
@@ -119,6 +122,22 @@ function App() {
     setEditorOpen(false);
   };
 
+  const handleToggleConfetti = async (enabled) => {
+    if (!activeWheel) return;
+    const updated = { ...activeWheel, confettiEnabled: enabled };
+    setActiveWheel(updated);
+    setWheels((prev) =>
+      prev.map((w) => (w.id === updated.id ? updated : w))
+    );
+    if (activeWheel.id !== 0) {
+      try {
+        await updateWheel(activeWheel.id, updated);
+      } catch {
+        // keep local state
+      }
+    }
+  };
+
   if (!activeWheel) return null;
 
   return (
@@ -131,6 +150,7 @@ function App() {
         onSelect={handleSelectWheel}
         onNew={handleNewWheel}
         onEdit={handleEditWheel}
+        onSettings={() => setSettingsOpen(true)}
       />
 
       <Wheel
@@ -138,6 +158,7 @@ function App() {
         theme={theme}
         riggedEnabled={activeWheel.riggedEnabled}
         riggedItemName={activeWheel.riggedItemName}
+        confettiEnabled={activeWheel.confettiEnabled}
       />
 
       <WheelEditor
@@ -146,6 +167,13 @@ function App() {
         onSave={handleSaveWheel}
         onDelete={handleDeleteWheel}
         wheel={editingWheel}
+      />
+
+      <SettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        confettiEnabled={activeWheel.confettiEnabled || false}
+        onToggleConfetti={handleToggleConfetti}
       />
     </div>
   );

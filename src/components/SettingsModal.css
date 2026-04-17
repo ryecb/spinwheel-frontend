@@ -1,0 +1,45 @@
+.settings-modal {
+  max-width: 360px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.setting-row input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.setting-row label {
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+}
+
+.settings-close-button {
+  width: 100%;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.settings-close-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}

@@ -1,7 +1,8 @@
 import { useRef, useCallback, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 import './Wheel.css';
 
-function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
+function Wheel({ items, theme, riggedEnabled, riggedItemName, confettiEnabled }) {
   const wheelRef = useRef(null);
   const currentRotationRef = useRef(0);
   const isSpinningRef = useRef(false);
@@ -9,10 +10,12 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
   const riggedEnabledRef = useRef(riggedEnabled);
   const riggedItemNameRef = useRef(riggedItemName);
   const itemsRef = useRef(items);
+  const confettiEnabledRef = useRef(confettiEnabled);
 
   useEffect(() => { riggedEnabledRef.current = riggedEnabled; }, [riggedEnabled]);
   useEffect(() => { riggedItemNameRef.current = riggedItemName; }, [riggedItemName]);
   useEffect(() => { itemsRef.current = items; }, [items]);
+  useEffect(() => { confettiEnabledRef.current = confettiEnabled; }, [confettiEnabled]);
 
   const sliceAngle = 360 / items.length;
 
@@ -93,6 +96,13 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
         }
         isSpinningRef.current = false;
         if (spinButtonRef.current) spinButtonRef.current.disabled = false;
+        if (confettiEnabledRef.current) {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 },
+          });
+        }
       }
     }
 
