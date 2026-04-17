@@ -7,10 +7,8 @@ import './App.css';
 
 const DEFAULT_THEME = {
   sliceColors: [
-    '#5B4FC4', '#E53935', '#2E8B57', '#3B7DD8', '#F5A623',
-    '#7B2D8E', '#D4651E', '#1B6B93', '#C62828', '#3A7D44',
-    '#4568DC', '#B8860B', '#6A3CBC', '#00897B', '#EF5350',
-    '#2979FF',
+    '#5B4FC4', '#E53935', '#2E8B57', '#3B7DD8',
+    '#F5A623', '#7B2D8E', '#D4651E', '#1B6B93',
   ],
   background: '#2e394c',
   accentColor: 'white',
