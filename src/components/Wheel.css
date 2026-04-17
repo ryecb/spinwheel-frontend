@@ -1,8 +1,8 @@
 .wheel-container {
   position: relative;
-  width: 500px;
-  height: 500px;
-  margin: 0 auto 40px;
+  width: min(500px, 85vw);
+  height: min(500px, 85vw);
+  margin: 0 auto 30px;
 }
 
 .wheel {
@@ -46,8 +46,8 @@
 
 .center-circle {
   position: absolute;
-  width: 120px;
-  height: 120px;
+  width: 24%;
+  height: 24%;
   background: white;
   border-radius: 50%;
   top: 50%;
@@ -88,4 +88,16 @@
 .spin-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (max-width: 540px) {
+  .arrow svg {
+    width: 20px;
+    height: 38px;
+  }
+
+  .spin-button {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
 }
