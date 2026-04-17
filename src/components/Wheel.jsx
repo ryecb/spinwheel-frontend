@@ -117,10 +117,12 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
   return (
     <>
       <div className="wheel-container">
-        <div
-          className="arrow"
-          style={{ borderTopColor: theme.accentColor }}
-        />
+        <div className="arrow">
+          <svg viewBox="0 0 24 40" width="25" height="48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 28 12 28s12-19 12-28C24 5.4 18.6 0 12 0z" fill="white"/>
+            <circle cx="12" cy="12" r="5" fill="#2e394c"/>
+          </svg>
+        </div>
         <div className="wheel" ref={wheelRef}>
           {items.map((item, i) => (
             <div

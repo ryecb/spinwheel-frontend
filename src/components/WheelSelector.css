@@ -1,5 +1,5 @@
 .wheel-selector {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,27 +7,28 @@
 }
 
 .wheel-selector select {
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 25px;
+  padding: 8px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #f6f6ff;
+  background: transparent;
+  border: 1px solid #616c7f;
+  border-radius: 4px;
   cursor: pointer;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f6f6ff'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 20px;
-  padding-right: 40px;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
 }
 
 .wheel-selector select:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  border-color: #8a94a6;
 }
 
 .wheel-selector select option {
@@ -45,9 +46,9 @@
   height: 32px;
   padding: 0;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(246, 246, 255, 0.7);
+  background: rgba(246, 246, 255, 0.04);
+  border: none;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s;
@@ -57,6 +58,6 @@
 }
 
 .wheel-action-button:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.25);
+  color: #f6f6ff;
+  background: rgba(246, 246, 255, 0.08);
 }

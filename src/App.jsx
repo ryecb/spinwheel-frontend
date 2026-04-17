@@ -7,13 +7,11 @@ import './App.css';
 
 const DEFAULT_THEME = {
   sliceColors: [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
-    '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B739', '#52B788',
-    '#FF8C94', '#A8E6CF', '#FFD3B6', '#FFAAA5', '#FF8B94',
+    '#5B4FC4', '#3B7DD8', '#E53935', '#F5A623', '#2E8B57',
+    '#5B4FC4', '#3B7DD8', '#E53935', '#F5A623', '#2E8B57',
   ],
-  backgroundStart: '#667eea',
-  backgroundEnd: '#764ba2',
-  accentColor: '#ff4444',
+  background: '#2e394c',
+  accentColor: 'white',
 };
 
 const FALLBACK_WHEEL = {
@@ -66,7 +64,7 @@ function App() {
   }, [loadWheels]);
 
   useEffect(() => {
-    document.body.style.background = `linear-gradient(135deg, ${theme.backgroundStart} 0%, ${theme.backgroundEnd} 100%)`;
+    document.body.style.background = theme.background;
   }, [theme]);
 
   const handleSelectWheel = useCallback(
