@@ -1,7 +1,7 @@
 import { useRef, useCallback, useEffect } from 'react';
 import './Wheel.css';
 
-function Wheel({ items, theme, riggedEnabled, riggedItemName, onOpenSettings }) {
+function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
   const wheelRef = useRef(null);
   const currentRotationRef = useRef(0);
   const isSpinningRef = useRef(false);
@@ -128,7 +128,7 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName, onOpenSettings }) 
               <div className="slice-text">{item.name}</div>
             </div>
           ))}
-          <div className="center-circle" />
+          <div className="center-circle" onClick={spin} />
         </div>
       </div>
 
@@ -139,9 +139,6 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName, onOpenSettings }) 
           onClick={spin}
         >
           SPIN THE WHEEL
-        </button>
-        <button className="settings-button" onClick={onOpenSettings}>
-          SETTINGS
         </button>
       </div>
     </>

@@ -1,8 +1,6 @@
 import './WheelSelector.css';
 
-function WheelSelector({ wheels, activeWheelId, onSelect }) {
-  if (!wheels || wheels.length < 2) return null;
-
+function WheelSelector({ wheels, activeWheelId, onSelect, onNew, onEdit }) {
   return (
     <div className="wheel-selector">
       <select
@@ -15,6 +13,14 @@ function WheelSelector({ wheels, activeWheelId, onSelect }) {
           </option>
         ))}
       </select>
+      <div className="wheel-action-buttons">
+        <button className="wheel-action-button" onClick={onEdit} title="Edit wheel">
+          {'\u270E'}
+        </button>
+        <button className="wheel-action-button" onClick={onNew} title="New wheel">
+          +
+        </button>
+      </div>
     </div>
   );
 }

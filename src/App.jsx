@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { fetchWheels, updateWheel } from './api/wheelApi';
+import { fetchWheels, createWheel, updateWheel, deleteWheel } from './api/wheelApi';
 import Wheel from './components/Wheel';
-import SettingsModal from './components/SettingsModal';
 import WheelSelector from './components/WheelSelector';
+import WheelEditor from './components/WheelEditor';
 import './App.css';
 
 const DEFAULT_THEME = {
@@ -44,24 +44,26 @@ function App() {
   const [wheels, setWheels] = useState([]);
   const [activeWheel, setActiveWheel] = useState(null);
   const [theme] = useState(DEFAULT_THEME);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editingWheel, setEditingWheel] = useState(null);
+
+  const loadWheels = useCallback(async () => {
+    try {
+      const data = await fetchWheels();
+      if (data && data.length > 0) {
+        setWheels(data);
+        return data;
+      }
+    } catch {
+      // fall through
+    }
+    setWheels([FALLBACK_WHEEL]);
+    return [FALLBACK_WHEEL];
+  }, []);
 
   useEffect(() => {
-    fetchWheels()
-      .then((data) => {
-        if (data && data.length > 0) {
-          setWheels(data);
-          setActiveWheel(data[0]);
-        } else {
-          setWheels([FALLBACK_WHEEL]);
-          setActiveWheel(FALLBACK_WHEEL);
-        }
-      })
-      .catch(() => {
-        setWheels([FALLBACK_WHEEL]);
-        setActiveWheel(FALLBACK_WHEEL);
-      });
-  }, []);
+    loadWheels().then((data) => setActiveWheel(data[0]));
+  }, [loadWheels]);
 
   useEffect(() => {
     document.body.style.background = `linear-gradient(135deg, ${theme.backgroundStart} 0%, ${theme.backgroundEnd} 100%)`;
@@ -75,35 +77,62 @@ function App() {
     [wheels]
   );
 
-  const handleToggleRigged = useCallback(
-    async (enabled) => {
-      if (!activeWheel) return;
-      const updated = { ...activeWheel, riggedEnabled: enabled };
-      setActiveWheel(updated);
-      setWheels((prev) =>
-        prev.map((w) => (w.id === updated.id ? updated : w))
-      );
-      if (activeWheel.id !== 0) {
-        try {
-          await updateWheel(activeWheel.id, updated);
-        } catch {
-          // keep local state even if API fails
-        }
+  const handleNewWheel = () => {
+    setEditingWheel(null);
+    setEditorOpen(true);
+  };
+
+  const handleEditWheel = () => {
+    setEditingWheel(activeWheel);
+    setEditorOpen(true);
+  };
+
+  const handleSaveWheel = async (wheelData, existingId) => {
+    try {
+      if (existingId) {
+        const saved = await updateWheel(existingId, wheelData);
+        setWheels((prev) => prev.map((w) => (w.id === existingId ? saved : w)));
+        setActiveWheel(saved);
+      } else {
+        const saved = await createWheel(wheelData);
+        setWheels((prev) => [...prev, saved]);
+        setActiveWheel(saved);
       }
-    },
-    [activeWheel]
-  );
+    } catch {
+      // stay on current state
+    }
+    setEditorOpen(false);
+  };
+
+  const handleDeleteWheel = async (wheelId) => {
+    try {
+      await deleteWheel(wheelId);
+      const remaining = wheels.filter((w) => w.id !== wheelId);
+      if (remaining.length === 0) {
+        const data = await loadWheels();
+        setActiveWheel(data[0]);
+      } else {
+        setWheels(remaining);
+        setActiveWheel(remaining[0]);
+      }
+    } catch {
+      // stay on current state
+    }
+    setEditorOpen(false);
+  };
 
   if (!activeWheel) return null;
 
   return (
     <div className="container">
-      <h1>{'\u{1F3A1}'} The totally unrigged spinning wheel {'\u{1F3A1}'}</h1>
+      <h1>{'\u{1F3A1}'} The Fairest Wheel {'\u{1F3A1}'}</h1>
 
       <WheelSelector
         wheels={wheels}
         activeWheelId={activeWheel.id}
         onSelect={handleSelectWheel}
+        onNew={handleNewWheel}
+        onEdit={handleEditWheel}
       />
 
       <Wheel
@@ -111,15 +140,14 @@ function App() {
         theme={theme}
         riggedEnabled={activeWheel.riggedEnabled}
         riggedItemName={activeWheel.riggedItemName}
-        onOpenSettings={() => setSettingsOpen(true)}
       />
 
-      <SettingsModal
-        isOpen={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        riggedEnabled={activeWheel.riggedEnabled}
-        riggedItemName={activeWheel.riggedItemName}
-        onToggleRigged={handleToggleRigged}
+      <WheelEditor
+        isOpen={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        onSave={handleSaveWheel}
+        onDelete={handleDeleteWheel}
+        wheel={editingWheel}
       />
     </div>
   );
