@@ -43,7 +43,7 @@ function Wheel({ items, theme, riggedEnabled, riggedItemName }) {
       );
       if (targetIndex !== -1) {
         const targetSliceCenter =
-          targetIndex * currentSliceAngle - currentSliceAngle / 2;
+          targetIndex * currentSliceAngle + currentSliceAngle / 2;
         const targetAngle = 360 - targetSliceCenter;
 
         const currentPos = currentRotationRef.current % 360;
