@@ -87,7 +87,7 @@ function App() {
 
   const handleSaveWheel = async (wheelData, existingId) => {
     try {
-      if (existingId) {
+      if (existingId != null) {
         const saved = await updateWheel(existingId, wheelData);
         setWheels((prev) => prev.map((w) => (w.id === existingId ? saved : w)));
         setActiveWheel(saved);
